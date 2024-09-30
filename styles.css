@@ -6,6 +6,11 @@
     --secondary: #4b5563;
     --accent: #22c55e;
     --border: #2d2d2d;
+    --code-comment: #6A9955;
+    --code-keyword: #569CD6;
+    --code-string: #CE9178;
+    --code-number: #B5CEA8;
+    --code-function: #DCDCAA;
 }
 
 body, html {
@@ -21,20 +26,20 @@ body, html {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    padding: 1rem;
+    padding: 0.5rem;
     box-sizing: border-box;
 }
 
 .top-bar {
     background-color: var(--panel-bg);
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
 }
 
 .menu-items {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .menu-item {
@@ -42,10 +47,10 @@ body, html {
     border: none;
     color: var(--foreground);
     cursor: pointer;
-    font-size: 0.875rem;
-    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.125rem 0.25rem;
     transition: background-color 0.3s;
-    border-radius: 0.25rem;
+    border-radius: 0.125rem;
 }
 
 .menu-item:hover {
@@ -55,13 +60,13 @@ body, html {
 .main-content {
     display: flex;
     flex: 1;
-    gap: 1rem;
+    gap: 0.5rem;
     overflow: hidden;
 }
 
 .panel {
     background-color: var(--panel-bg);
-    border-radius: 0.5rem;
+    border-radius: 0.25rem;
     overflow: hidden;
     position: relative;
     display: flex;
@@ -70,13 +75,13 @@ body, html {
 
 .panel-label {
     position: absolute;
-    top: 0.5rem;
-    left: 0.5rem;
+    top: 0.25rem;
+    left: 0.25rem;
     background-color: rgba(0, 0, 0, 0.5);
     color: var(--foreground);
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.125rem;
+    font-size: 0.625rem;
     z-index: 10;
 }
 
@@ -88,21 +93,22 @@ body, html {
 }
 
 .chat-panel {
-    width: 50%;
+    width: 30%;
 }
 
 .chat-messages {
     flex: 1;
     overflow-y: auto;
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
 .message {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     max-width: 80%;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    line-height: 1.5;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0.25rem;
+    line-height: 1.4;
+    font-size: 0.75rem;
 }
 
 .user-message {
@@ -119,7 +125,7 @@ body, html {
 
 .chat-input {
     display: flex;
-    padding: 1rem;
+    padding: 0.5rem;
     background-color: var(--panel-bg);
     border-top: 1px solid var(--border);
 }
@@ -129,19 +135,21 @@ body, html {
     background-color: var(--secondary);
     border: none;
     color: var(--foreground);
-    padding: 0.75rem;
-    border-radius: 0.25rem;
-    margin-right: 0.5rem;
+    padding: 0.375rem;
+    border-radius: 0.125rem;
+    margin-right: 0.25rem;
+    font-size: 0.75rem;
 }
 
 .chat-input button {
     background-color: var(--primary);
     color: var(--foreground);
     border: none;
-    padding: 0.75rem 1rem;
-    border-radius: 0.25rem;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0.125rem;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-size: 0.75rem;
 }
 
 .chat-input button:hover {
@@ -151,28 +159,28 @@ body, html {
 .right-panels {
     display: flex;
     flex-direction: column;
-    width: 50%;
-    gap: 1rem;
+    width: 70%;
+    gap: 0.5rem;
 }
 
 .top-right-panel {
-    flex: 1;
+    flex: 2;
 }
 
 .tabs {
     display: flex;
     background-color: var(--panel-bg);
     border-bottom: 1px solid var(--border);
-    padding: 0 0.5rem;
+    padding: 0 0.25rem;
 }
 
 .tab-button {
     background-color: transparent;
     border: none;
     color: var(--foreground);
-    padding: 0.75rem 1rem;
+    padding: 0.375rem 0.5rem;
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     transition: all 0.3s;
     border-bottom: 2px solid transparent;
 }
@@ -188,35 +196,97 @@ body, html {
 
 .tab-content {
     display: none;
-    height: calc(100% - 3rem);
+    height: calc(100% - 2rem);
     overflow: auto;
-    padding: 1rem;
 }
 
 .tab-content.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 
-#code-editor {
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    background-color: var(--panel-bg);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.75rem;
+}
+
+.editor-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.editor-action {
+    background: none;
+    border: none;
+    color: var(--foreground);
+    cursor: pointer;
+    font-size: 0.75rem;
+    padding: 0.125rem 0.25rem;
+    transition: background-color 0.3s;
+    border-radius: 0.125rem;
+}
+
+.editor-action:hover {
+    background-color: var(--secondary);
+}
+
+.editor-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.line-numbers {
+    padding: 0.5rem 0.25rem;
+    background-color: var(--panel-bg);
+    border-right: 1px solid var(--border);
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.75rem;
+    text-align: right;
+    user-select: none;
+    color: var(--secondary);
+}
+
+#code-area {
+    flex: 1;
     background-color: var(--panel-bg);
     color: var(--foreground);
+    border: none;
     font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     line-height: 1.5;
+    padding: 0.5rem;
+    resize: none;
+    outline: none;
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow-x: auto;
 }
 
 .terminal-panel {
     flex: 1;
 }
 
+.terminal-header {
+    padding: 0.25rem 0.5rem;
+    background-color: var(--panel-bg);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.75rem;
+}
+
 #terminal-container {
-    height: 100%;
+    height: calc(100% - 1.5rem);
     overflow-y: auto;
-    padding: 1rem;
+    padding: 0.5rem;
     background-color: #000000;
     color: var(--foreground);
     font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
 }
 
 .prompt {
@@ -240,15 +310,22 @@ body, html {
 .status-bar {
     background-color: var(--panel-bg);
     color: var(--foreground);
-    padding: 0.5rem 1rem;
-    font-size: 0.75rem;
-    border-radius: 0.5rem;
-    margin-top: 1rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.625rem;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
 }
+
+/* Syntax highlighting */
+.token.comment { color: var(--code-comment); }
+.token.keyword { color: var(--code-keyword); }
+.token.string { color: var(--code-string); }
+.token.number { color: var(--code-number); }
+.token.function { color: var(--code-function); }
 
 /* Scrollbar styles */
 ::-webkit-scrollbar {
-    width: 0.5rem;
+    width: 0.375rem;
 }
 
 ::-webkit-scrollbar-track {
@@ -257,7 +334,7 @@ body, html {
 
 ::-webkit-scrollbar-thumb {
     background: var(--secondary);
-    border-radius: 0.25rem;
+    border-radius: 0.125rem;
 }
 
 ::-webkit-scrollbar-thumb:hover {

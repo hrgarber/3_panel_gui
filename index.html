@@ -6,6 +6,7 @@
     <title>3-Panel Layout</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
 </head>
 <body>
     <div class="container">
@@ -34,33 +35,45 @@
                     <div class="panel-label">Panel 2</div>
                     <div class="panel-content">
                         <div class="tabs">
-                            <button class="tab-button active" data-tab="code-editor">Code Editor</button>
+                            <button class="tab-button active" data-tab="code-editor">Editor</button>
                             <button class="tab-button" data-tab="browser">Browser (Experimental)</button>
                             <button class="tab-button" data-tab="jupyter">Jupyter IPython</button>
                         </div>
                         <div class="tab-content active" id="code-editor">
-                            <pre><code class="language-python">
+                            <div class="editor-header">
+                                <span>Workspace</span>
+                                <div class="editor-actions">
+                                    <button class="editor-action">↻</button>
+                                    <button class="editor-action">☁</button>
+                                    <button class="editor-action">&lt;</button>
+                                </div>
+                            </div>
+                            <div class="editor-content">
+                                <div class="line-numbers"></div>
+                                <pre><code class="language-python" id="code-area">
 def hello_world():
     print("Hello, World!")
 
 hello_world()
-                            </code></pre>
+</code></pre>
+                            </div>
                         </div>
                         <div class="tab-content" id="browser">
                             <h2>Browser (Experimental)</h2>
-                            <p>Browser content goes here.</p>
+                            <p>No file selected.</p>
                         </div>
                         <div class="tab-content" id="jupyter">
                             <h2>Jupyter IPython</h2>
-                            <div id="dataframe-container"></div>
+                            <p>No file selected.</p>
                         </div>
                     </div>
                 </div>
                 <div class="panel terminal-panel">
                     <div class="panel-label">Panel 3</div>
                     <div class="panel-content">
+                        <div class="terminal-header">Terminal</div>
                         <div id="terminal-container">
-                            <span class="prompt">&gt;</span>
+                            <span class="prompt">$</span>
                             <span class="cursor"></span>
                         </div>
                     </div>
@@ -68,9 +81,11 @@ hello_world()
             </div>
         </div>
         <footer class="status-bar">
-            <span>Ready</span>
+            <span>Agent is initialized, waiting for task...</span>
         </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
