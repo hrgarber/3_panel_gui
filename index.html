@@ -12,7 +12,12 @@
     <div class="container">
         <header class="top-bar">
             <div class="menu-items">
-                <button class="menu-item">File</button>
+                <div class="dropdown">
+                    <button class="menu-item dropbtn">File</button>
+                    <div class="dropdown-content">
+                        <a href="#" id="user-id-option">User ID</a>
+                    </div>
+                </div>
                 <button class="menu-item">Edit</button>
                 <button class="menu-item">View</button>
             </div>
@@ -83,6 +88,13 @@ hello_world()
         <footer class="status-bar">
             <span>Agent is initialized, waiting for task...</span>
         </footer>
+    </div>
+    <div id="user-id-modal" class="modal">
+        <div class="modal-content">
+            <h2>Enter User ID</h2>
+            <input type="text" id="user-id-input" placeholder="Enter your User ID">
+            <button id="user-id-submit">Submit</button>
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>

@@ -107,8 +107,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (historyIndex < commandHistory.length - 1) {
                 historyIndex++;
                 this.innerHTML = `<span class="prompt">$</span> ${commandHistory[historyIndex]}<span class="cursor"></span>`;
-            } else {
-                historyIndex = commandHistory.length;
+            } else if (historyIndex === commandHistory.length - 1) {
+                historyIndex++;
                 this.innerHTML = '<span class="prompt">$</span> <span class="cursor"></span>';
             }
             e.preventDefault();
@@ -141,4 +141,45 @@ document.addEventListener('DOMContentLoaded', function() {
     // Make terminal container focusable and focus it
     terminalContainer.setAttribute('tabindex', '0');
     terminalContainer.focus();
+
+    // User ID functionality
+    const userIdOption = document.getElementById('user-id-option');
+    const userIdModal = document.getElementById('user-id-modal');
+    const userIdInput = document.getElementById('user-id-input');
+    const userIdSubmit = document.getElementById('user-id-submit');
+    let currentUserId = null;
+
+    userIdOption.addEventListener('click', function(e) {
+        e.preventDefault();
+        userIdModal.style.display = 'block';
+    });
+
+    userIdSubmit.addEventListener('click', function() {
+        const newUserId = userIdInput.value.trim();
+        if (newUserId) {
+            currentUserId = newUserId;
+            userIdModal.style.display = 'none';
+            addTerminalLine(`User ID set to: ${currentUserId}`);
+        }
+    });
+
+    window.addEventListener('click', function(e) {
+        if (e.target === userIdModal) {
+            userIdModal.style.display = 'none';
+        }
+    });
+
+    // Add User ID command to terminal
+    const originalExecuteCommand = executeCommand;
+    executeCommand = function(command) {
+        if (command.toLowerCase() === 'userid') {
+            if (currentUserId) {
+                addTerminalLine(`Current User ID: ${currentUserId}`);
+            } else {
+                addTerminalLine('No User ID set. Use the File > User ID option to set one.');
+            }
+        } else {
+            originalExecuteCommand(command);
+        }
+    };
 });
