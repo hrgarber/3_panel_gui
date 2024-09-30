@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3-Panel Layout</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="top-bar">
+            <div class="menu-items">
+                <button class="menu-item">File</button>
+                <button class="menu-item">Edit</button>
+                <button class="menu-item">View</button>
+            </div>
+        </header>
+        <div class="main-content">
+            <div class="panel chat-panel">
+                <div class="panel-label">Panel 1</div>
+                <div class="panel-content">
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- Chat messages will be dynamically added here -->
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="user-input" placeholder="Type a message...">
+                        <button id="send-button">Send</button>
+                    </div>
+                </div>
+            </div>
+            <div class="right-panels">
+                <div class="panel top-right-panel">
+                    <div class="panel-label">Panel 2</div>
+                    <div class="panel-content">
+                        <div class="tabs">
+                            <button class="tab-button active" data-tab="code-editor">Code Editor</button>
+                            <button class="tab-button" data-tab="browser">Browser (Experimental)</button>
+                            <button class="tab-button" data-tab="jupyter">Jupyter IPython</button>
+                        </div>
+                        <div class="tab-content active" id="code-editor">
+                            <pre><code class="language-python">
+def hello_world():
+    print("Hello, World!")
+
+hello_world()
+                            </code></pre>
+                        </div>
+                        <div class="tab-content" id="browser">
+                            <h2>Browser (Experimental)</h2>
+                            <p>Browser content goes here.</p>
+                        </div>
+                        <div class="tab-content" id="jupyter">
+                            <h2>Jupyter IPython</h2>
+                            <div id="dataframe-container"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel terminal-panel">
+                    <div class="panel-label">Panel 3</div>
+                    <div class="panel-content">
+                        <div id="terminal-container">
+                            <span class="prompt">&gt;</span>
+                            <span class="cursor"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="status-bar">
+            <span>Ready</span>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
