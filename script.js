@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
+    let currentUserId = null;
 
     function addMessage(content, isUser) {
         const messageDiv = document.createElement('div');
@@ -22,15 +23,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function sendMessage() {
         const message = userInput.value.trim();
-        if (message) {
+        if (message && currentUserId) {
             addMessage(message, true);
             userInput.value = '';
-            // Simulate AI response
-            setTimeout(() => {
-                addMessage("I'm an AI assistant. How can I help you?", false);
-            }, 1000);
+            sendToBackend('chat', { user_id: currentUserId, message: message });
+        } else if (!currentUserId) {
+            addMessage("Please set a User ID first.", false);
         }
     }
+
+    // Function to send data to Streamlit backend
+    function sendToBackend(type, data) {
+        const message = JSON.stringify({ type, ...data });
+        window.parent.postMessage({ type: "streamlit:message", data: message }, "*");
+    }
+
+    // Function to receive messages from Streamlit backend
+    window.addEventListener("message", function(event) {
+        if (event.data.type === "streamlit:render") {
+            const data = JSON.parse(event.data.data);
+            if (data.type === "chat") {
+                addMessage(data.response, false);
+            } else if (data.type === "set_user_id") {
+                addTerminalLine(`User ID set to: ${data.user_id}`);
+            } else if (data.type === "print_state") {
+                addTerminalLine("Current State:");
+                addTerminalLine(data.state);
+            }
+        }
+    });
 
     // Tab switching functionality
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -118,13 +139,23 @@ document.addEventListener('DOMContentLoaded', function() {
     function executeCommand(command) {
         switch (command.toLowerCase()) {
             case 'help':
-                addTerminalLine('Available commands: help, clear, echo, date');
+                addTerminalLine('Available commands: help, clear, echo, date, userid, printstate');
                 break;
             case 'clear':
                 terminalContainer.innerHTML = '<span class="prompt">$</span> <span class="cursor"></span>';
                 break;
             case 'date':
                 addTerminalLine(new Date().toString());
+                break;
+            case 'userid':
+                if (currentUserId) {
+                    addTerminalLine(`Current User ID: ${currentUserId}`);
+                } else {
+                    addTerminalLine('No User ID set. Use the File > User ID option to set one.');
+                }
+                break;
+            case 'printstate':
+                sendToBackend('print_state', {});
                 break;
             default:
                 if (command.startsWith('echo ')) {
@@ -147,7 +178,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const userIdModal = document.getElementById('user-id-modal');
     const userIdInput = document.getElementById('user-id-input');
     const userIdSubmit = document.getElementById('user-id-submit');
-    let currentUserId = null;
 
     userIdOption.addEventListener('click', function(e) {
         e.preventDefault();
@@ -159,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (newUserId) {
             currentUserId = newUserId;
             userIdModal.style.display = 'none';
-            addTerminalLine(`User ID set to: ${currentUserId}`);
+            sendToBackend('set_user_id', { user_id: currentUserId });
         }
     });
 
@@ -168,18 +198,4 @@ document.addEventListener('DOMContentLoaded', function() {
             userIdModal.style.display = 'none';
         }
     });
-
-    // Add User ID command to terminal
-    const originalExecuteCommand = executeCommand;
-    executeCommand = function(command) {
-        if (command.toLowerCase() === 'userid') {
-            if (currentUserId) {
-                addTerminalLine(`Current User ID: ${currentUserId}`);
-            } else {
-                addTerminalLine('No User ID set. Use the File > User ID option to set one.');
-            }
-        } else {
-            originalExecuteCommand(command);
-        }
-    };
 });
