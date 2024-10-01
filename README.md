@@ -23,7 +23,7 @@ streamlit run app.py
 
 ## Running Tests
 
-To run the tests, use the following command:
+To run the backend tests, use the following command:
 
 ```
 python run_tests.py
@@ -36,10 +36,10 @@ python run_tests.py
 - `index.html`: HTML structure for the application
 - `styles.css`: CSS styles for the application
 - `test_app.py`: Backend unit tests
-- `test_frontend.py`: Frontend Selenium tests
 - `run_tests.py`: Script to run all tests
 - `.template.env`: Template for environment variables
 - `.gitignore`: Specifies intentionally untracked files to ignore
+- `requirements.txt`: List of Python dependencies
 
 ## Contributing
 

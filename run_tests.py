@@ -1,34 +1,23 @@
+#!/usr/bin/env python3
 import unittest
 import sys
 from test_app import TestApp
 
-def run_tests(test_names=None):
+def run_unittest_tests():
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
-
-    if test_names:
-        for test_name in test_names:
-            try:
-                suite.addTest(loader.loadTestsFromName(f'test_app.TestApp.{test_name}'))
-            except AttributeError:
-                print(f"Warning: Test '{test_name}' not found in TestApp class.")
-    else:
-        suite.addTest(loader.loadTestsFromTestCase(TestApp))
+    suite.addTest(loader.loadTestsFromTestCase(TestApp))
 
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
     return result
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        test_names = sys.argv[1:]
-        result = run_tests(test_names)
-    else:
-        result = run_tests()
-
+    result = run_unittest_tests()
+    
     if result.wasSuccessful():
-        print("All tests passed successfully!")
+        print("\nAll backend tests passed successfully!")
     else:
-        print("Some tests failed.")
+        print("\nSome backend tests failed.")
     
     sys.exit(not result.wasSuccessful())
