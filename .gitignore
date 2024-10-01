@@ -30,4 +30,7 @@ Thumbs.db
 # Temporary files
 *.tmp
 
+# Ignore files starting with .aider
+.aider*
+
 # Add any other files or directories you want to ignore
