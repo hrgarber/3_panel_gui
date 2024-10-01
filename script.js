@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Chat functionality
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
-    let currentUserId = null;
 
     function addMessage(content, isUser) {
         const messageDiv = document.createElement('div');
@@ -23,32 +21,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function sendMessage() {
         const message = userInput.value.trim();
-        if (message && currentUserId) {
+        if (message) {
             addMessage(message, true);
             userInput.value = '';
-            sendToBackend('chat', { user_id: currentUserId, message: message });
-        } else if (!currentUserId) {
-            addMessage("Please set a User ID first.", false);
+            sendToBackend('chat', { message: message });
         }
     }
 
-    // Function to send data to Streamlit backend
     function sendToBackend(type, data) {
         const message = JSON.stringify({ type, ...data });
-        window.parent.postMessage({ type: "streamlit:message", data: message }, "*");
+        window.parent.postMessage({
+            type: "streamlit:setComponentValue",
+            value: message
+        }, "*");
     }
 
-    // Function to receive messages from Streamlit backend
     window.addEventListener("message", function(event) {
         if (event.data.type === "streamlit:render") {
-            const data = JSON.parse(event.data.data);
+            const data = JSON.parse(event.data.args.data);
             if (data.type === "chat") {
                 addMessage(data.response, false);
-            } else if (data.type === "set_user_id") {
-                addTerminalLine(`User ID set to: ${data.user_id}`);
-            } else if (data.type === "print_state") {
-                addTerminalLine("Current State:");
-                addTerminalLine(data.state);
             }
         }
     });
@@ -139,23 +131,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function executeCommand(command) {
         switch (command.toLowerCase()) {
             case 'help':
-                addTerminalLine('Available commands: help, clear, echo, date, userid, printstate');
+                addTerminalLine('Available commands: help, clear, echo, date');
                 break;
             case 'clear':
                 terminalContainer.innerHTML = '<span class="prompt">$</span> <span class="cursor"></span>';
                 break;
             case 'date':
                 addTerminalLine(new Date().toString());
-                break;
-            case 'userid':
-                if (currentUserId) {
-                    addTerminalLine(`Current User ID: ${currentUserId}`);
-                } else {
-                    addTerminalLine('No User ID set. Use the File > User ID option to set one.');
-                }
-                break;
-            case 'printstate':
-                sendToBackend('print_state', {});
                 break;
             default:
                 if (command.startsWith('echo ')) {
@@ -172,30 +154,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Make terminal container focusable and focus it
     terminalContainer.setAttribute('tabindex', '0');
     terminalContainer.focus();
-
-    // User ID functionality
-    const userIdOption = document.getElementById('user-id-option');
-    const userIdModal = document.getElementById('user-id-modal');
-    const userIdInput = document.getElementById('user-id-input');
-    const userIdSubmit = document.getElementById('user-id-submit');
-
-    userIdOption.addEventListener('click', function(e) {
-        e.preventDefault();
-        userIdModal.style.display = 'block';
-    });
-
-    userIdSubmit.addEventListener('click', function() {
-        const newUserId = userIdInput.value.trim();
-        if (newUserId) {
-            currentUserId = newUserId;
-            userIdModal.style.display = 'none';
-            sendToBackend('set_user_id', { user_id: currentUserId });
-        }
-    });
-
-    window.addEventListener('click', function(e) {
-        if (e.target === userIdModal) {
-            userIdModal.style.display = 'none';
-        }
-    });
 });

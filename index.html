@@ -16,19 +16,19 @@
                     <button class="menu-item dropbtn">File</button>
                     <div class="dropdown-content">
                         <a href="#" id="user-id-option">User ID</a>
+                        <a href="#" id="api-key-option">Set OpenAI API Key</a>
                     </div>
                 </div>
                 <button class="menu-item">Edit</button>
                 <button class="menu-item">View</button>
             </div>
-            <div id="current-user-id" class="current-user-id">User ID: Not set</div>
         </header>
         <div class="main-content">
             <div class="panel chat-panel">
                 <div class="panel-label">Chat Interface</div>
                 <div class="panel-content">
                     <div class="chat-messages" id="chat-messages">
-                        <div class="message ai-message">Welcome! Please set your User ID to start chatting.</div>
+                        <!-- Chat messages will be added here dynamically -->
                     </div>
                     <div class="chat-input">
                         <input type="text" id="user-input" placeholder="Type a message...">
@@ -86,15 +86,19 @@ hello_world()
                 </div>
             </div>
         </div>
-        <footer class="status-bar">
-            <span>Streamlit backend initialized. Set your User ID to begin.</span>
-        </footer>
     </div>
     <div id="user-id-modal" class="modal">
         <div class="modal-content">
             <h2>Enter User ID</h2>
             <input type="text" id="user-id-input" placeholder="Enter your User ID">
             <button id="user-id-submit">Submit</button>
+        </div>
+    </div>
+    <div id="api-key-modal" class="modal">
+        <div class="modal-content">
+            <h2>Enter OpenAI API Key</h2>
+            <input type="password" id="api-key-input" placeholder="Enter your OpenAI API key">
+            <button id="api-key-submit">Submit</button>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>

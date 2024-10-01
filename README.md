@@ -16,6 +16,7 @@ This project is a Streamlit-powered chat interface with a 3-panel GUI layout. It
 - **Backend**: Streamlit, Langchain-OpenAI, Langchain-Core, OpenAI GPT-4
 - **Frontend**: HTML, CSS, JavaScript
 - **Syntax Highlighting**: Prism.js
+- **Testing**: pytest
 
 ## Setup and Running the Application
 
@@ -58,6 +59,21 @@ This project is a Streamlit-powered chat interface with a 3-panel GUI layout. It
 
 5. You can switch between different tabs in the top-right panel, although only the code editor is currently functional.
 
+## Running Tests
+
+To run the unit tests for this project, follow these steps:
+
+1. Ensure you have installed all the required dependencies, including pytest.
+
+2. From the root directory of the project, run the following command:
+   ```
+   pytest test_app.py
+   ```
+
+3. The test results will be displayed in the terminal, showing which tests passed or failed.
+
+Note: The tests include checking the LLM functionality, so make sure you have set up your OpenAI API key in the `.env` file before running the tests.
+
 ## Project Structure
 
 - `app.py`: The main Streamlit application file containing the backend logic, Langchain integration, and in-memory persistence system.
@@ -66,6 +82,7 @@ This project is a Streamlit-powered chat interface with a 3-panel GUI layout. It
 - `script.js`: JavaScript code for frontend interactivity and communication with the Streamlit backend.
 - `requirements.txt`: List of Python dependencies for the project.
 - `.env`: Configuration file for storing the OpenAI API key (not included in the repository).
+- `test_app.py`: Unit tests for the application, focusing on LLM functionality.
 
 ## Future Improvements
 
@@ -73,6 +90,7 @@ This project is a Streamlit-powered chat interface with a 3-panel GUI layout. It
 - Add functionality to the Browser and Jupyter IPython tabs.
 - Enhance the terminal simulation with more advanced features.
 - Implement persistent storage for user data and conversations.
+- Expand test coverage to include more components of the application.
 
 ## Contributing
 
