@@ -2,6 +2,16 @@ import streamlit as st
 import streamlit.components.v1 as components
 import json
 from typing import Dict, List
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import HumanMessage, SystemMessage, AIMessage
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
+
+# Set up Langchain ChatOpenAI model
+llm = ChatOpenAI(model_name="gpt-4", temperature=0.7, openai_api_key=os.getenv("OPENAI_API_KEY"))
 
 class Conversation:
     def __init__(self):
@@ -41,13 +51,24 @@ class AppState:
 if 'app_state' not in st.session_state:
     st.session_state.app_state = AppState()
 
-def get_llm_response(message: str) -> str:
-    return f"Echo: {message}"
+def get_llm_response(messages: List[Dict[str, str]]) -> str:
+    try:
+        langchain_messages = [
+            SystemMessage(content="You are a helpful assistant."),
+            *[HumanMessage(content=msg["content"]) if msg["role"] == "user" else AIMessage(content=msg["content"])
+              for msg in messages[1:]]  # Skip the first system message
+        ]
+        response = llm(langchain_messages)
+        return response.content
+    except Exception as e:
+        st.error(f"Error in LLM response: {str(e)}")
+        return "I'm sorry, but I encountered an error. Please try again."
 
 def handle_chat(user_id: str, message: str) -> str:
     conversation = st.session_state.app_state.get_or_create_conversation(user_id)
     conversation.add_message("user", message)
-    llm_response = get_llm_response(message)
+    
+    llm_response = get_llm_response(conversation.get_messages())
     conversation.add_message("assistant", llm_response)
     return llm_response
 
