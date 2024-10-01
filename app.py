@@ -2,8 +2,8 @@ import streamlit as st
 import streamlit.components.v1 as components
 import json
 from typing import Dict, List
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import HumanMessage, SystemMessage, AIMessage
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from dotenv import load_dotenv
 import os
 

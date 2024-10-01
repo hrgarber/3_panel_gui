@@ -13,7 +13,7 @@ This project is a Streamlit-powered chat interface with a 3-panel GUI layout. It
 
 ## Technologies Used
 
-- **Backend**: Streamlit, Langchain, OpenAI GPT-4
+- **Backend**: Streamlit, Langchain-OpenAI, Langchain-Core, OpenAI GPT-4
 - **Frontend**: HTML, CSS, JavaScript
 - **Syntax Highlighting**: Prism.js
 
@@ -31,6 +31,8 @@ This project is a Streamlit-powered chat interface with a 3-panel GUI layout. It
    ```
    pip install -r requirements.txt
    ```
+
+   Note: The project now uses updated Langchain packages (langchain-openai and langchain-core) to resolve deprecation warnings.
 
 4. Create a `.env` file in the project root directory and add your OpenAI API key:
    ```
