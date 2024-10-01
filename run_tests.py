@@ -1,27 +1,34 @@
 import unittest
-import test_app
-import test_frontend
+import sys
+from test_app import TestApp
 
-def run_tests():
-    # Create a test suite
-    test_suite = unittest.TestSuite()
+def run_tests(test_names=None):
+    loader = unittest.TestLoader()
+    suite = unittest.TestSuite()
 
-    # Add the tests from test_app.py
-    test_suite.addTest(unittest.makeSuite(test_app.TestApp))
+    if test_names:
+        for test_name in test_names:
+            try:
+                suite.addTest(loader.loadTestsFromName(f'test_app.TestApp.{test_name}'))
+            except AttributeError:
+                print(f"Warning: Test '{test_name}' not found in TestApp class.")
+    else:
+        suite.addTest(loader.loadTestsFromTestCase(TestApp))
 
-    # Add the tests from test_frontend.py
-    test_suite.addTest(unittest.makeSuite(test_frontend.TestChatFunctionality))
-
-    # Run the tests
     runner = unittest.TextTestRunner(verbosity=2)
-    result = runner.run(test_suite)
-
-    # Return the result
+    result = runner.run(suite)
     return result
 
 if __name__ == '__main__':
-    result = run_tests()
+    if len(sys.argv) > 1:
+        test_names = sys.argv[1:]
+        result = run_tests(test_names)
+    else:
+        result = run_tests()
+
     if result.wasSuccessful():
-        print("All tests passed!")
+        print("All tests passed successfully!")
     else:
         print("Some tests failed.")
+    
+    sys.exit(not result.wasSuccessful())

@@ -58,5 +58,23 @@ class TestApp(unittest.TestCase):
             app.handle_frontend_message()
             mock_error.assert_called_once_with("Invalid JSON input")
 
+    def test_message_passing_from_gui_to_backend(self):
+        # Simulate a message sent from the GUI
+        gui_message = {"type": "chat", "message": "Test message from GUI"}
+        self.session_state_mock.frontend_input = json.dumps(gui_message)
+
+        # Mock the handle_chat_message function to capture its input
+        with patch('app.handle_chat_message') as mock_handle_chat:
+            mock_handle_chat.return_value = "Mocked AI response"
+            
+            # Call the function that processes frontend messages
+            app.handle_frontend_message()
+
+            # Assert that handle_chat_message was called with the correct message
+            mock_handle_chat.assert_called_once_with("Test message from GUI")
+
+        # Verify that the frontend_input is cleared after processing
+        self.assertEqual(self.session_state_mock.frontend_input, '')
+
 if __name__ == '__main__':
     unittest.main()
