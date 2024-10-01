@@ -35,6 +35,9 @@ body, html {
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
     margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .menu-items {
@@ -55,6 +58,11 @@ body, html {
 
 .menu-item:hover {
     background-color: var(--secondary);
+}
+
+.current-user-id {
+    font-size: 0.75rem;
+    color: var(--accent);
 }
 
 /* Dropdown styles */
@@ -200,6 +208,8 @@ body, html {
     flex: 1;
     overflow-y: auto;
     padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .message {

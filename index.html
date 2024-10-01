@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3-Panel Layout</title>
+    <title>3-Panel GUI - Streamlit-powered Chat Interface</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
@@ -21,13 +21,14 @@
                 <button class="menu-item">Edit</button>
                 <button class="menu-item">View</button>
             </div>
+            <div id="current-user-id" class="current-user-id">User ID: Not set</div>
         </header>
         <div class="main-content">
             <div class="panel chat-panel">
-                <div class="panel-label">Panel 1</div>
+                <div class="panel-label">Chat Interface</div>
                 <div class="panel-content">
                     <div class="chat-messages" id="chat-messages">
-                        <!-- Chat messages will be dynamically added here -->
+                        <div class="message ai-message">Welcome! Please set your User ID to start chatting.</div>
                     </div>
                     <div class="chat-input">
                         <input type="text" id="user-input" placeholder="Type a message...">
@@ -37,7 +38,7 @@
             </div>
             <div class="right-panels">
                 <div class="panel top-right-panel">
-                    <div class="panel-label">Panel 2</div>
+                    <div class="panel-label">Code Editor</div>
                     <div class="panel-content">
                         <div class="tabs">
                             <button class="tab-button active" data-tab="code-editor">Editor</button>
@@ -74,7 +75,7 @@ hello_world()
                     </div>
                 </div>
                 <div class="panel terminal-panel">
-                    <div class="panel-label">Panel 3</div>
+                    <div class="panel-label">Terminal</div>
                     <div class="panel-content">
                         <div class="terminal-header">Terminal</div>
                         <div id="terminal-container">
@@ -86,7 +87,7 @@ hello_world()
             </div>
         </div>
         <footer class="status-bar">
-            <span>Agent is initialized, waiting for task...</span>
+            <span>Streamlit backend initialized. Set your User ID to begin.</span>
         </footer>
     </div>
     <div id="user-id-modal" class="modal">

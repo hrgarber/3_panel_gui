@@ -1,57 +1,64 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import json
+from typing import Dict, List
 
-# Initialize session state for in-memory storage
-if 'conversations' not in st.session_state:
-    st.session_state.conversations = {}
-if 'user_data' not in st.session_state:
-    st.session_state.user_data = {}
+class Conversation:
+    def __init__(self):
+        self.messages: List[Dict[str, str]] = []
 
-# Mock LLM response function
-def get_llm_response(message):
+    def add_message(self, role: str, content: str):
+        self.messages.append({"role": role, "content": content})
+
+    def get_messages(self) -> List[Dict[str, str]]:
+        return self.messages
+
+class UserData:
+    def __init__(self, user_id: str):
+        self.id = user_id
+
+class AppState:
+    def __init__(self):
+        self.conversations: Dict[str, Conversation] = {}
+        self.user_data: Dict[str, UserData] = {}
+
+    def get_or_create_conversation(self, user_id: str) -> Conversation:
+        if user_id not in self.conversations:
+            self.conversations[user_id] = Conversation()
+        return self.conversations[user_id]
+
+    def set_user_data(self, user_id: str):
+        if user_id not in self.user_data:
+            self.user_data[user_id] = UserData(user_id)
+
+    def to_dict(self) -> Dict:
+        return {
+            "conversations": {user_id: conv.get_messages() for user_id, conv in self.conversations.items()},
+            "user_data": {user_id: {"id": user.id} for user_id, user in self.user_data.items()}
+        }
+
+# Initialize session state
+if 'app_state' not in st.session_state:
+    st.session_state.app_state = AppState()
+
+def get_llm_response(message: str) -> str:
     return f"Echo: {message}"
 
-# Function to handle chat messages
-def handle_chat(user_id, message):
-    if user_id not in st.session_state.conversations:
-        st.session_state.conversations[user_id] = []
-    
-    st.session_state.conversations[user_id].append({'role': 'user', 'content': message})
+def handle_chat(user_id: str, message: str) -> str:
+    conversation = st.session_state.app_state.get_or_create_conversation(user_id)
+    conversation.add_message("user", message)
     llm_response = get_llm_response(message)
-    st.session_state.conversations[user_id].append({'role': 'assistant', 'content': llm_response})
-    
+    conversation.add_message("assistant", llm_response)
     return llm_response
 
-# Function to set user ID
-def set_user_id(user_id):
-    if user_id not in st.session_state.user_data:
-        st.session_state.user_data[user_id] = {'id': user_id}
-    return {'status': 'success', 'user_id': user_id}
+def set_user_id(user_id: str) -> Dict[str, str]:
+    st.session_state.app_state.set_user_data(user_id)
+    return {"status": "success", "user_id": user_id}
 
-# Function to get current state as a string
-def get_current_state():
-    state = {
-        'conversations': st.session_state.conversations,
-        'user_data': st.session_state.user_data
-    }
-    return json.dumps(state, indent=2)
+def get_current_state() -> str:
+    return json.dumps(st.session_state.app_state.to_dict(), indent=2)
 
-# Read HTML, CSS, and JS files with UTF-8 encoding
-with open('index.html', 'r', encoding='utf-8') as file:
-    html_content = file.read()
-
-with open('styles.css', 'r', encoding='utf-8') as file:
-    css_content = file.read()
-
-with open('script.js', 'r', encoding='utf-8') as file:
-    js_content = file.read()
-
-# Streamlit app
-st.set_page_config(layout="wide", page_title="3-Panel GUI")
-
-# Function to handle incoming messages from frontend
-def handle_frontend_message(message):
+def handle_frontend_message(message: str) -> str:
     try:
         data = json.loads(message)
         if data['type'] == 'chat':
@@ -62,14 +69,26 @@ def handle_frontend_message(message):
             return json.dumps({'type': 'set_user_id', 'user_id': response['user_id']})
         elif data['type'] == 'print_state':
             current_state = get_current_state()
-            # Print the current state to the console
             print("\n--- Current State ---")
             print(current_state)
             print("---------------------\n")
             return json.dumps({'type': 'print_state', 'state': current_state})
     except json.JSONDecodeError:
         st.error("Invalid JSON input")
-    return None
+    return ""
+
+# Streamlit app
+st.set_page_config(layout="wide", page_title="3-Panel GUI")
+
+# Read HTML, CSS, and JS files
+with open('index.html', 'r', encoding='utf-8') as file:
+    html_content = file.read()
+
+with open('styles.css', 'r', encoding='utf-8') as file:
+    css_content = file.read()
+
+with open('script.js', 'r', encoding='utf-8') as file:
+    js_content = file.read()
 
 # Create a placeholder for frontend messages
 frontend_message = st.empty()
@@ -114,5 +133,4 @@ st.markdown(
 
 # Display current state (for debugging)
 if st.checkbox("Show current state"):
-    st.write("Conversations:", st.session_state.conversations)
-    st.write("User data:", st.session_state.user_data)
+    st.write("Current State:", st.session_state.app_state.to_dict())
